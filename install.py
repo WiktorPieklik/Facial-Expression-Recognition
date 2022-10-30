@@ -6,7 +6,11 @@ common = [
     'numpy',
     'pandas',
     'jupyter',
-    'matplotlib'
+    'matplotlib',
+    'python-decouple',
+    'cryptography',
+    'alive-progress',
+    'simple-chalk'
 ]
 
 windows = [
