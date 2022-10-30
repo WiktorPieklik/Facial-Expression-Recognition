@@ -1,0 +1,25 @@
+@startmindmap
+!include ../styles.wsd
+
+title Directory breakdown
+* root
+
+** docs
+*** src
+*** out
+
+** src
+*** notebooks
+*** fer
+**** <b> own.py </b>
+**** <b> state of the art.py </b>
+*** <b> config.py </b>
+*** <b> main.py </b>
+*** <b> download_dataset.py </b>
+
+** <i> raw </i>
+*** <i> images </i>
+
+** <b> install.py </b>
+
+@endmindmap

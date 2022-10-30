@@ -1,0 +1,60 @@
+@startuml
+
+' style for every mindmap
+skinparam node {
+        BackgroundColor #f2f2f2
+        LineColor Gainsboro
+        LineThickness 0.8
+}
+
+' style for every class diagram
+skinparam class {
+    FontColor Black
+    FontSize 14
+    FontName times
+    FontStyle bold
+
+    AttributeFontColor Black
+    AttributeFontSize 12
+    AttributeFontName times
+
+    BackgroundColor #f2f2f2
+    BorderColor Gray
+    BorderThickness 0.8
+}
+
+' style for every activity diagram
+skinparam activity {
+    FontColor Black
+    FontSize 14
+    FontName times
+
+    BarColor #Gainsboro
+    BackgroundColor #f2f2f2
+    BorderColor Gray
+    BorderThickness 0.8
+
+    StartColor Gainsboro
+
+    DiamondFontName times
+    DiamondFontSize 14
+    DiamondBackgroundColor LightSteelBlue
+    DiamondBorderColor LightSlateGray
+}
+
+skinparam title {
+    FontSize 18
+}
+
+' style for every arrow
+skinparam arrow {
+    Color Black
+    Thickness 1
+}
+
+' global properties style
+skinparam shadowing false
+skinparam roundcorner 20
+skinparam defaultFontName times
+!$builtinClassColor = '#cfcfcf'
+@enduml
