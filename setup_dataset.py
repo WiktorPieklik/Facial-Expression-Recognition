@@ -1,14 +1,13 @@
-import decouple
 from cryptography.fernet import Fernet
 from typing import List
-from decouple import config
+from decouple import config, UndefinedValueError
 from pandas import read_csv
 from matplotlib.pyplot import imsave
 from alive_progress import alive_bar
 import numpy as np
 from simple_chalk import chalk
-from src.config import RAW_DIR, IMG_DIR, IMG_SHAPE
-import io
+from src.config import RAW_DIR, IMG_DIR, IMG_SHAPE, TAR_NAME, DATASET_NAME
+from io import BytesIO
 import os
 import tarfile
 
@@ -58,7 +57,7 @@ def decrypt_file(file_path: str) -> bytes:
         file = file_handler.read()
     try:
         key = config('TAR_KEY')
-    except decouple.UndefinedValueError:
+    except UndefinedValueError:
         error("You haven't provided tar key in your .env file!")
         return
     fernet = Fernet(key)
@@ -67,7 +66,7 @@ def decrypt_file(file_path: str) -> bytes:
 
 
 def untar_archive(archive_file: bytes, destination: str) -> List[str]:
-    archive = io.BytesIO(archive_file)
+    archive = BytesIO(archive_file)
     files_to_delete = []
     with tarfile.open(fileobj=archive) as tar:
         tar.extractall(destination)
@@ -86,13 +85,13 @@ def save_img(img: np.array, emotion_no: int, usage: str, i: int) -> None:
 
 if __name__ == '__main__':
     if is_dataset_empty():
-        tar_path = str((RAW_DIR / "dataset.tar.gz").resolve())
+        tar_path = str((RAW_DIR / TAR_NAME).resolve())
         destination = str(IMG_DIR.resolve())
         info("Decrypting dataset")
         encrypted_tar = decrypt_file(tar_path)
-        relative_path_to_be_deleted = untar_archive(encrypted_tar, destination)
-        dataset_path = str((IMG_DIR / "fer2013.csv").resolve())
-        print(chalk.yellow("Reading csv file, this may take a while..."))
+        relative_paths_to_be_deleted = untar_archive(encrypted_tar, destination)
+        dataset_path = str((IMG_DIR / DATASET_NAME).resolve())
+        info("Reading csv file, this may take a while...")
         dataset = read_csv(dataset_path)
         count = int(dataset.count()[0])
         with alive_bar(count, dual_line=True, title="Creating images from csv") as bar:
@@ -106,7 +105,7 @@ if __name__ == '__main__':
                 save_img(image, emotion_no, usage, i + 1)
                 bar()
         info("Cleaning dataset directory")
-        for relative_path in relative_path_to_be_deleted:
+        for relative_path in relative_paths_to_be_deleted:
             path = str((IMG_DIR / relative_path).resolve())
             os.remove(path)
         success("Everything's done!")
