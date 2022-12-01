@@ -1,5 +1,6 @@
 ### Project related files & directories ###
 raw/images/
+src/fer.logs
 
 ### JupyterNotebooks ###
 .ipynb_checkpoints

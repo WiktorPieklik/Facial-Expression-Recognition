@@ -77,7 +77,7 @@ def untar_archive(archive_file: bytes, destination: str) -> List[str]:
 
 
 def save_img(img: np.array, emotion_no: int, usage: str, i: int) -> None:
-    img_name = f"{i:04}.jpg"
+    img_name = f"{i:04}.png"
     destination = IMG_DIR / usage / emotion_name(emotion_no)
     os.makedirs(str(destination.resolve()), exist_ok=True)
     imsave(str((destination / img_name).resolve()), img, cmap='gray')
