@@ -1,6 +1,6 @@
 from typing import List
-from sys import platform
-import pip
+from sys import platform, executable
+from subprocess import check_call
 
 common = [
     'numpy',
@@ -9,8 +9,10 @@ common = [
     'matplotlib',
     'python-decouple',
     'cryptography',
+    'opencv-python==4.5.5.62',  # this specific version because of lack of autocompletion in IDE
     'alive-progress',
-    'simple-chalk'
+    'simple-chalk',
+    'imgaug'
 ]
 
 windows = [
@@ -26,7 +28,7 @@ darwin = [
 
 def install(packages: List[str]) -> None:
     for package in packages:
-        pip.main(['install', package])
+        check_call([executable, '-m', 'pip', 'install', '--no-cache-dir', package])
 
 
 if __name__ == '__main__':
