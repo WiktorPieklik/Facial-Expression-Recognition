@@ -12,7 +12,8 @@ common = [
     'opencv-python==4.5.5.62',  # this specific version because of lack of autocompletion in IDE
     'alive-progress',
     'simple-chalk',
-    'imgaug'
+    'imgaug',
+    'livelossplot'
 ]
 
 windows = [

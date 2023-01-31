@@ -5,23 +5,11 @@ from pandas import read_csv
 from matplotlib.pyplot import imsave
 from alive_progress import alive_bar
 import numpy as np
-from simple_chalk import chalk
 from src.config import RAW_DIR, IMG_DIR, IMG_SHAPE, TAR_NAME, DATASET_NAME
+from src.utils import info, success, error
 from io import BytesIO
 import os
 import tarfile
-
-
-def info(msg: str) -> None:
-    print(chalk.yellow(msg))
-
-
-def success(msg: str) -> None:
-    print(chalk.green(msg))
-
-
-def error(msg: str) -> None:
-    print(chalk.red(msg))
 
 
 def is_dataset_empty() -> bool:
@@ -52,7 +40,6 @@ def emotion_name(emotion_no: int) -> str:
 
 
 def decrypt_file(file_path: str) -> bytes:
-    file = None
     with open(file_path, 'rb') as file_handler:
         file = file_handler.read()
     try:
@@ -84,6 +71,7 @@ def save_img(img: np.array, emotion_no: int, usage: str, i: int) -> None:
 
 
 if __name__ == '__main__':
+    emotions_to_have = ['Happy', 'Neutral', 'Sad']
     if is_dataset_empty():
         tar_path = str((RAW_DIR / TAR_NAME).resolve())
         destination = str(IMG_DIR.resolve())
@@ -97,13 +85,14 @@ if __name__ == '__main__':
         with alive_bar(count, dual_line=True, title="Creating images from csv") as bar:
             for i, row in dataset.iterrows():
                 # extract image
-                emotion_no = row['emotion']
-                usage = row['Usage']
-                bar.text(f"-> Directory {usage}, Emotion: {emotion_name(emotion_no)}")
-                image = np.array(row["pixels"].split()).astype(np.uint)
-                image = image.reshape(IMG_SHAPE)
-                save_img(image, emotion_no, usage, i + 1)
-                bar()
+                if emotion_name(row['emotion']) in emotions_to_have:
+                    emotion_no = row['emotion']
+                    usage = row['Usage']
+                    bar.text(f"-> Directory {usage}, Emotion: {emotion_name(emotion_no)}")
+                    image = np.array(row["pixels"].split()).astype(np.uint)
+                    image = image.reshape(IMG_SHAPE)
+                    save_img(image, emotion_no, usage, i + 1)
+                    bar()
         info("Cleaning dataset directory")
         for relative_path in relative_paths_to_be_deleted:
             path = str((IMG_DIR / relative_path).resolve())

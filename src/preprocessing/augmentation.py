@@ -3,6 +3,7 @@ import imgaug.augmenters as iaa
 import os
 from random import sample
 from typing import List, Dict
+from src.utils import info, success, print_replace
 
 import numpy as np
 
@@ -51,6 +52,7 @@ class BalancedAugmenter:
         distribution = self.calculate_classes_distribution(dataset_path)
         biggest_class = max(distribution, key=lambda k: distribution[k])
         augmented_imgs = {}
+        info("Depending on your dataset augmentation may take a while")
         for root, _, files in os.walk(dataset_path):
             if root == dataset_path:
                 continue
@@ -62,7 +64,9 @@ class BalancedAugmenter:
                     augmented_imgs[emotion] = self.__apply(root, imgs_to_augment, img_count)
 
         if save:
+            info("Saving")
             save_images(dataset_path, augmented_imgs)
+        success("Done!")
 
         return augmented_imgs
 
@@ -75,6 +79,7 @@ class BalancedAugmenter:
                     if left_to_generate - img_total_count > 0 \
                     else left_to_generate
                 img_names.extend(sample(os.listdir(path_to_imgs), k=batch_size))
+                print_replace(f"Augmented another {batch_size} images")
                 left_to_generate -= batch_size
         else:
             img_names = sample(os.listdir(path_to_imgs), k=imgs_to_augment)
